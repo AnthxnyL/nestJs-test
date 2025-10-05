@@ -1,11 +1,17 @@
-import { Controller, Get, Header, HttpCode, Param, Post, Redirect, Req } from '@nestjs/common';
+import { Controller, Get, Header, HttpCode, Param, Post, Redirect, Req, Body, Query } from '@nestjs/common';
 import type { Request } from 'express';
+import { CreateCatDto } from 'src/Modules/cats/dto';
 
 @Controller('cats')
 export class CatsController {
-  @Get()
+  @Get('all')
   findAll(@Req() request: Request): string {
     return 'This action returns all cats';
+  }
+
+  @Get()
+  async findFiltered(@Query('age') age: number, @Query('breed') breed: string){
+    return `This action filtered cats by breed : ${breed} and age : ${age}`;
   }
 
   @Get('breed')
@@ -27,7 +33,7 @@ export class CatsController {
 
   @Post()
   @Header('Cache-control', 'no-store')
-  create(): string {
+  async create(@Body() createCatDto: CreateCatDto) {
     return 'This action create a cat';
   }
 }
